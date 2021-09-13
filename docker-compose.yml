@@ -20,3 +20,40 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongouser
       MONGO_INITDB_ROOT_PASSWORD: mongopwd
+
+  mariadb:
+    image: mariadb
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: example
+    networks:
+     - produto_net
+    volumes:
+     - db_vol:/data/mariadb
+
+  postgresql:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example   
+    networks:
+     - produto_net
+    volumes:
+     - db_vol:/data/postgresql
+  
+  redis-server:
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+     - "6379:6379"
+    networks:
+     - produto_net
+    volumes:
+     - db_vol:/data/redis
+    
+
+  adminer:
+    image: adminer
+    restart: always
+    ports:
+      - 8080:8080    
