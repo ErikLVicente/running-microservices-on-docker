@@ -9,10 +9,10 @@ networks:
     driver: bridge
 
 services:
-  mongodb:
+  mongo:
     image: mongo:4.4.3
     ports:
-    - 27017:27017
+    - "0.0.0.0:27017:27017"
     networks:
      - produto_net
     volumes:
@@ -20,6 +20,19 @@ services:
     environment:
       MONGO_INITDB_ROOT_USERNAME: mongouser
       MONGO_INITDB_ROOT_PASSWORD: mongopwd
+  mongo-express:
+    image: mongo-express:latest
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: mongouser
+      ME_CONFIG_MONGODB_ADMINPASSWORD: mongopwd
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_PORT: "27017"
+    ports:
+      - "0.0.0.0:8081:8081"
+    networks:
+      - produto_net
+    depends_on:
+      - mongo
 
   mariadb:
     image: mariadb
@@ -51,9 +64,3 @@ services:
     volumes:
      - db_vol:/data/redis
     
-
-  adminer:
-    image: adminer
-    restart: always
-    ports:
-      - 8080:8080    
